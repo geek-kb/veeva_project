@@ -31,16 +31,12 @@ Each module is described in its own `README.md` file and includes:
 3. **Outputs Table**: Outputs generated after applying the module.
 4. **Example Usage**: Sample Terraform configuration to integrate the module.
 
-### File Location
-All module documentation files are located in the repository:
-[Documentation Repository](https://github.com/geek-kb/veeva_project/tree/main/documentation)
-
 ---
 
 ## Navigating the Documentation
 
 1. **Start with the Diagram**:
-   - Familiarize yourself with the architecture by examining the diagram (`AWS_VPC_Architecture.png`) included in this repository.
+   - Familiarize yourself with the architecture by examining the diagram ![img](./AWS_VPC_Architecture.png) included in this repository.
 
 2. **Explore Modules**:
    - Each module, such as VPC, CloudFront, WAF, and more, has its own `README.md` file.
