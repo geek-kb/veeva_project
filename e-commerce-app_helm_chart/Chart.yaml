@@ -2,6 +2,6 @@ apiVersion: v2
 name: e-commerce-app
 description: A Helm chart for deploying the e-commerce app
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: 1.0.0
 icon: https://i.postimg.cc/t4mjFV29/ecommerce-icon-64x64.png
