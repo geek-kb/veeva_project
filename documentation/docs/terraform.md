@@ -82,7 +82,7 @@
 #### **Directory Structure**
 ##### **1. Overview of the Directory Structure**
 - **`./environments/staging`**: Represents a specific environment (`staging`) for managing Terraform configurations.
-- Each major infrastructure component (e.g., `s3-remote-state-bucket`, `cloudfront`, `s3`, `tmp`, `vpc`) has its own directory, isolating configuration files and state files.
+- Each major infrastructure component (e.g., `s3-remote-state-bucket`, `cloudfront`, `s3`, `vpc`) has its own directory, isolating configuration files and state files.
 - **State files (`terraform.tfstate`)** are stored alongside their respective modules.
 
 ---
@@ -158,10 +158,10 @@
 
 ---
 
-##### **5. Suggestions for Improvement**
+##### **5. Todo:**
 
 #### **a. Centralized Remote State Management**
-- Consider consolidating all module state files into a central remote backend (e.g., the S3 bucket configured in `s3-remote-state-bucket`).
+- Consolidation of all module state files into a central remote backend (e.g., the S3 bucket configured in `s3-remote-state-bucket`).
   - Use a backend block in each module:
     ```hcl
     terraform {
