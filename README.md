@@ -6,8 +6,8 @@ This repository contains various components related to the Veeva project, includ
 ## Repository Structure
 
 - **documentation/**: Contains project documentation.
-- **e-commerce-app/**: Source code for the e-commerce application.
-- **e-commerce-app_helm_chart/**: Helm chart for deploying the e-commerce application on Kubernetes.
+- **e-commerce-app/**: Helm chart for deploying the e-commerce application on Kubernetes.
+- **e-commerce-app.source/**: Source code for the e-commerce application.
 - **terraform/**: Terraform scripts for provisioning infrastructure.
 
 ## Getting Started
@@ -30,22 +30,31 @@ This repository contains various components related to the Veeva project, includ
 
 2. **Build the e-commerce application**:
 
-   Navigate to the `e-commerce-app` directory and follow the build instructions provided in its README.
+   Navigate to the `e-commerce-app.source` directory and follow the build instructions provided in its README.
 
 3. **Deploy using Helm**:
 
-   Navigate to the `e-commerce-app_helm_chart` directory and run:
+   Navigate to the `e-commerce-app` directory and run:
 
    ```bash
    helm install e-commerce-app .
    ```
 
-4. **Provision infrastructure with Terraform**:
-   **This is an unfinished part of the project**
-   Navigate to the `terraform` directory, edit the relevant `locals` files and execute:
+   Alternatively, add the Helm chart repository and install it from there:
+
+   ```bash
+   helm repo add geek-kb-repo https://geek-kb.github.io/helm-charts/
+   helm repo update
+   helm install release-name geek-kb-repo/e-commerce-app --namespace <target_namespace>
+   ```
+
+4. **Provision infrastructure with Terraform**:  
+   **This is an unfinished part of the project**  
+   Navigate to the `terraform` directory, edit the relevant `locals`.source, and execute:
 
    ```bash
    terraform init
+   terraform plan
    terraform apply
    ```
 
