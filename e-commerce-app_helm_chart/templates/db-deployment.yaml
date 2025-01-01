@@ -28,7 +28,8 @@ spec:
               sed -i 's/${TEMP_MYSQL_USER}/$(MYSQL_APP_USER)/g' /docker-entrypoint-initdb.d/init.sql
               sed -i 's/${TEMP_MYSQL_PASSWORD}/$(MYSQL_APP_PASSWORD)/g' /docker-entrypoint-initdb.d/init.sql
               sed -i 's/${TEMP_MYSQL_DB_NAME}/$(MYSQL_DATABASE)/g' /docker-entrypoint-initdb.d/init.sql
-              sed -i 's/${TEMP_MYSQL_DB_TABLE}/$(DB_TABLE)/g' /docker-entrypoint-initdb.d/init.sql
+              sed -i 's/${TEMP_MYSQL_DB_TABLE_PRODUCTS}/$(MYSQL_PRODUCTS_TABLE)/g' /docker-entrypoint-initdb.d/init.sql
+              sed -i 's/${TEMP_MYSQL_DB_TABLE_USERS}/$(MYSQL_USERS_TABLE)/g' /docker-entrypoint-initdb.d/init.sql
               rm -rf /var/lib/mysql/* && echo "Deleted all files in /var/lib/mysql"
               chown -R 999:999 /docker-entrypoint-initdb.d
           env:
@@ -47,16 +48,21 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-{{ .Values.db.initContainer.env.MYSQL_DATABASE.configMapKeyRef.name }}
                   key: {{ .Values.db.initContainer.env.MYSQL_DATABASE.configMapKeyRef.key }}
-            - name: DB_TABLE
+            - name: MYSQL_PRODUCTS_TABLE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Values.db.initContainer.env.DB_TABLE.configMapKeyRef.name }}
-                  key: {{ .Values.db.initContainer.env.DB_TABLE.configMapKeyRef.key }}
+                  name: {{ .Release.Name }}-{{ .Values.db.initContainer.env.MYSQL_DB_PRODUCTS_TABLE.configMapKeyRef.name }}
+                  key: {{ .Values.db.initContainer.env.MYSQL_DB_PRODUCTS_TABLE.configMapKeyRef.key }}
+            - name: MYSQL_USERS_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Values.db.initContainer.env.MYSQL_DB_USERS_TABLE.configMapKeyRef.name }}
+                  key: {{ .Values.db.initContainer.env.MYSQL_DB_USERS_TABLE.configMapKeyRef.key }}
           volumeMounts:
-            - mountPath: {{ .Values.db.initContainer.volumeMounts.init.mountPath }}
-              name: {{ .Release.Name }}-{{ .Values.db.initContainer.volumeMounts.init.name }}
-            - mountPath: {{ .Values.db.initContainer.volumeMounts.mysqlData.mountPath }}
-              name: {{ .Release.Name }}-{{ .Values.db.initContainer.volumeMounts.mysqlData.name }}
+            - mountPath: {{ .Values.db.volumeMounts.init.mountPath }}
+              name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.init.name }}
+            - mountPath: {{ .Values.db.volumeMounts.mysqlData.mountPath }}
+              name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}-pv
       containers:
         - name: {{ .Release.Name }}-{{ .Values.db.name }}
           image: {{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}
@@ -80,7 +86,7 @@ spec:
             - mountPath: {{ .Values.db.volumeMounts.init.mountPath }}
               name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.init.name }}
             - mountPath: {{ .Values.db.volumeMounts.mysqlData.mountPath }}
-              name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}
+              name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}-pv
           resources:
             requests:
               memory: {{ .Values.db.resources.requests.memory }}
@@ -91,8 +97,8 @@ spec:
           ports:
             - containerPort: {{ .Values.db.containerPort }}
       volumes:
-        - name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}
+        - name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}-pv
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-{{ .Values.pvc.name }}
+            claimName: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}-pvc
         - name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.init.name }}
           emptyDir: {}

@@ -1,7 +1,8 @@
 apiVersion: v1
 data:
   DB_NAME: {{ .Values.configMap.DB_NAME }}
-  DB_TABLE: {{ .Values.configMap.DB_TABLE }}
+  MYSQL_DB_PRODUCTS_TABLE: {{ .Values.configMap.MYSQL_DB_PRODUCTS_TABLE }}
+  MYSQL_DB_USERS_TABLE: {{ .Values.configMap.MYSQL_DB_USERS_TABLE }}
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-{{ .Values.configMap.name }}

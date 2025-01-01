@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.pv.name }}
+  name: {{ .Release.Name }}-{{ .Values.db.volumeMounts.mysqlData.name }}-pv
 spec:
   capacity:
     storage: {{ .Values.pv.capacity | quote }}
@@ -13,3 +13,4 @@ spec:
     path: {{ .Values.pv.hostPath.path | quote }}
   storageClassName: {{ .Values.pv.storageClassName }}
   volumeMode: {{ .Values.pv.volumeMode }}
+  persistentVolumeReclaimPolicy: {{ .Values.pv.reclaimPolicy }}

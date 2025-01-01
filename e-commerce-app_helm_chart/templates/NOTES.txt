@@ -25,8 +25,8 @@ Database Service: {{ .Values.dbService.name }}
 4. Test the database connection:
    Run the following command to test the database connectivity:
    ```bash
-   kubectl exec -it $(kubectl get pod -l app=db -n {{ .Release.Namespace }} -o jsonpath='{.items[0].metadata.name}') -- \
-   mysql -u {{ .Values.appSecret.DB_APP_USER }} -p {{ .Values.appSecret.DB_APP_PASSWORD }} -h {{ include "dbHost" . }} {{ .Values.configMap.DB_NAME }}
+   kubectl exec -n {{ .Release.Namespace }} -it $(kubectl get pod -l app={{ .Release.Name }}-{{ .Values.db.name }} -n {{ .Release.Namespace }} -o jsonpath='{.items[0].metadata.name}') -- \
+   mysql -u {{ .Values.appSecret.DB_APP_USER }} -p'{{ .Values.appSecret.DB_APP_PASSWORD }}' -h {{ include "dbHost" . }} -e '{{ include "testQuery" . }}' {{ .Values.configMap.DB_NAME }}
    ```
 5. Test the application: 
    Assuming you are going with the default service setup (ClusterIP), you'll want to 

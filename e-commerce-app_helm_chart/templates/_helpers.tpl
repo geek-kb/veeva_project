@@ -62,5 +62,14 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "dbHost" -}}
-db.{{ .Release.Namespace }}.svc.cluster.local
+{{ .Release.Name }}-db.{{ .Release.Namespace }}.svc.cluster.local
+{{- end -}}
+
+{{- define "e-commerce.uniqueKey" -}}
+{{- printf "%s-%s" .Release.Name .Release.Namespace | trunc 6 -}}
+{{- end -}}
+
+# Test query to display initial data in the database
+{{- define "testQuery" -}}
+SELECT * FROM products;
 {{- end -}}
