@@ -36,7 +36,7 @@ Each module is described in its own `README.md` file and includes:
 ## Navigating the Documentation
 
 1. **Start with the Diagram**:
-   - Familiarize yourself with the architecture by examining the diagram ![img](./AWS_VPC_Architecture.png) included in this repository.
+   - Familiarize yourself with the architecture by examining the diagram ![img](./aws_vpc_architecture.png) included in this repository.
 
 2. **Explore Modules**:
    - Each module, such as VPC, CloudFront, WAF, and more, has its own `README.md` file.
