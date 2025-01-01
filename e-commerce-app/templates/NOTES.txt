@@ -112,7 +112,7 @@ Database Service: {{ .Values.dbService.name }}
    curl -X DELETE http://<EXTERNAL-IP>:8080/products/5 \
    -H "Content-Type: application/json" \
    -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}"
-   {{- else if (eq .Values.appService.type "ClusterIP") -}}
+   {{- else if (eq .Values.appService.type "ClusterIP") }}
    kubectl port-forward svc/{{ .Values.appService.name }} 8080:8080 -n {{ .Release.Namespace }} &
    curl -X DELETE http://localhost:8080/products/5 \
    -H "Content-Type: application/json" \
