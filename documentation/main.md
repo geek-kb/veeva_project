@@ -93,7 +93,7 @@
 - [Scaling and Resilience](config/scaling.md)
 
 ## Infrastructure as Code - Terraform
-[Terraform suggested design](config/terraform_structure.md)
+[Terraform suggested design](docs/terraform.md)
 
 
 ### Future Enhancements
