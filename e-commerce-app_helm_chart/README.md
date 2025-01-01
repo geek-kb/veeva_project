@@ -23,7 +23,15 @@ This chart deploys the following components:
 To install the chart with the release name `ecomapp` in the namespace `app`:
 
 ```bash
-helm install ecomapp ./e-commerce-app --namespace app --create-namespace
+helm install ecomapp ./e-commerce-app --namespace app
+```
+
+Another method to install the chart, is from GitHub:
+
+```bash
+helm repo add geek-kb https://geek-kb.github.io/helm-charts/
+helm repo update
+helm install ecomapp geek-kb/e-commerce-app --namespace app
 ```
 
 ### Customizing Values
