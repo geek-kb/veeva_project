@@ -26,7 +26,7 @@ To install the chart with the release name `ecomapp` in the namespace `app`:
 helm install ecomapp ./e-commerce-app --namespace app
 ```
 
-Another method to install the chart, is from GitHub:
+Alternatively you can install the chart from GitHub:
 
 ```bash
 helm repo add geek-kb https://geek-kb.github.io/helm-charts/
