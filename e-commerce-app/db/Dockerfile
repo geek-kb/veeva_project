@@ -10,5 +10,3 @@ RUN chmod -R 644 /docker-entrypoint-initdb.d && \
 
 ENV MYSQL_ROOT_PASSWORD=
 ENV MYSQL_DATABASE=
-ENV MYSQL_USER=
-
