@@ -69,10 +69,4 @@ If you identify areas for improvement or wish to add more features, feel free to
 
 ---
 
-## Diagram Reference
-
-![AWS Architecture](AWS_VPC_Architecture.png)
-
----
-
 Thank you for using the Veeva Assignment AWS Infrastructure documentation!
