@@ -1,4 +1,5 @@
 */.DS_Store
-e-commerce-app/k8s/db/db-appuser-creds.yaml
-e-commerce-app/k8s/db/db-root-creds.yaml
-e-commerce-app/app/api_key
+veeva_project_venv/
+e-commerce-app-files/k8s/db/db-root-creds.yaml
+e-commerce-app-files/k8s/db/db-appuser-creds.yaml
+e-commerce-app-files/k8s/app/api_key
