@@ -1,0 +1,174 @@
+# Namespace Configuration
+namespace:
+  create: false
+
+# Application deployment configuration
+app:
+  name: app
+  replicaCount: 1
+  image:
+    repository: camelel/e-commerce-app
+    tag: latest
+    pullPolicy: Always
+  containerPort: 8080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 200m
+      memory: 512Mi
+  env:
+    MYSQL_USER:
+      secretKeyRef:
+        name: db-appuser-creds
+        key: DB_APP_USER
+    MYSQL_PASSWORD:
+      secretKeyRef:
+        name: db-appuser-creds
+        key: DB_APP_PASSWORD
+    MYSQL_DB:
+      configMapKeyRef:
+        name: db-config-map
+        key: DB_NAME
+    API_KEY:
+      secretKeyRef:
+        name: db-appuser-creds
+        key: API_KEY
+
+# Application service configuration
+appService:
+  name: app
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  protocol: TCP
+
+
+# Database Deployment Configuration
+db:
+  name: db
+  replicaCount: 1
+  image:
+    repository: camelel/e-commerce-db
+    tag: latest
+    pullPolicy: Always
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  containerPort: 3306
+  env:
+    MYSQL_ROOT_USER:
+      secretKeyRef:
+        name: db-root-creds
+        key: DB_ROOT_USER
+    MYSQL_ROOT_PASSWORD:
+      secretKeyRef:
+        name: db-root-creds
+        key: DB_ROOT_PASSWORD
+    MYSQL_DATABASE:
+      configMapKeyRef:
+        name: db-config-map
+        key: DB_NAME
+  volumeMounts:
+    init:
+      name: init
+      mountPath: /docker-entrypoint-initdb.d
+    mysqlData:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+
+  # Database Init Container Configuration
+  initContainer:
+    name: init
+    image:
+      repository: andriykalashnykov/wget
+      tag: "1.0"
+      pullPolicy: IfNotPresent
+    initScriptUrl: https://raw.githubusercontent.com/geek-kb/DevopsStuff/refs/heads/master/e-commerce_app/db/init.sql
+    env:
+      MYSQL_ROOT_USER:
+        secretKeyRef:
+          name: db-root-creds
+          key: DB_ROOT_USER
+      MYSQL_ROOT_PASSWORD:
+        secretKeyRef:
+          name: db-root-creds
+          key: DB_ROOT_PASSWORD
+      MYSQL_APP_USER:
+        secretKeyRef:
+          name: db-appuser-creds
+          key: DB_APP_USER
+      MYSQL_APP_PASSWORD:
+        secretKeyRef:
+          name: db-appuser-creds
+          key: DB_APP_PASSWORD
+      MYSQL_DATABASE:
+        configMapKeyRef:
+          name: db-config-map
+          key: DB_NAME
+      DB_TABLE:
+        configMapKeyRef:
+          name: db-config-map
+          key: DB_TABLE
+    volumeMounts:
+      init:
+        name: init
+        mountPath: /docker-entrypoint-initdb.d
+      mysqlData:
+        name: mysql-data
+        mountPath: /var/lib/mysql
+
+
+# Database Service Configuration
+dbService:
+  name: db
+  type: ClusterIP
+  port: 3306
+  targetPort: 3306
+  protocol: TCP
+  selector:
+    app: db
+
+# Persistent Volume Configuration
+pv:
+  name: mysql-pv
+  capacity: 1Gi
+  accessMode:
+    - ReadWriteOnce
+  hostPath:
+    path: /var/lib/mysql
+  storageClassName: gp2
+  volumeMode: Filesystem
+
+# Persistent Volume Claim Configuration
+pvc:
+  name: mysql-pvc
+  storage: 1Gi
+  accessMode:
+    - ReadWriteOnce
+  storageClassName: gp2
+  volumeMode: Filesystem
+
+# Database ConfigMap Configuration
+configMap:
+  name: db-config-map
+  DB_NAME: product_db
+  DB_TABLE: products
+
+# Database Secret Configuration
+appSecret:
+  name: db-appuser-creds
+  DB_APP_USER: "appuser"
+  DB_APP_PASSWORD: "password"
+  API_KEY: "123456"
+
+# Database Root Secret Configuration
+rootSecret:
+  name: db-root-creds
+  DB_ROOT_USER: "root"
+  DB_ROOT_PASSWORD: "password"

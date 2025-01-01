@@ -1,0 +1,126 @@
+###########################################################
+#             E-Commerce Application Deployment           #
+###########################################################
+
+The e-commerce application has been successfully deployed!
+
+### Application Details ###
+Namespace: {{ .Release.Namespace }}
+App Service: {{ .Values.appService.name }}
+Database Service: {{ .Values.dbService.name }}
+
+### To Verify the Deployment ###
+1. Check the status of the pods:
+   kubectl get pods -n {{ .Release.Namespace }}
+
+2. Verify the services:
+   kubectl get svc -n {{ .Release.Namespace }}
+
+3. Access the application (nodePort or LoadBalancer should be configured first):
+   - Use the following URL to access the app (assuming a NodePort or LoadBalancer is configured):
+     http://<Node_IP>:8080/
+   If the applications is configured with ClusterIP, use port-forward like so:
+   kubectl port-forward deployment/{{ .Values.app.name }} {{ .Values.appService.port }}:8080
+
+4. Test the database connection:
+   Run the following command to test the database connectivity:
+   ```bash
+   kubectl exec -it $(kubectl get pod -l app=db -n {{ .Release.Namespace }} -o jsonpath='{.items[0].metadata.name}') -- \
+   mysql -u {{ .Values.appSecret.DB_APP_USER }} -p {{ .Values.appSecret.DB_APP_PASSWORD }} -h {{ include "dbHost" . }} {{ .Values.configMap.DB_NAME }}
+   ```
+5. Test the application: 
+   Assuming you are going with the default service setup (ClusterIP), you'll want to 
+   port-forward to the service, run (and leave the process opened):
+   ```bash
+   kubectl port-forward svc/{{ .Release.Name }}-app {{ .Values.appService.port }}:8080 -n {{ .Release.Namespace }}
+   ```
+   Run the following commands to test the application:
+   Get all products:
+   ```bash
+   {{- if (eq .Values.appService.type "LoadBalancer") }}
+   # Assuming LoadBalancer has an external IP:
+   curl -X GET -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" http://<EXTERNAL-IP>:8080/products
+   {{- else if (eq .Values.appService.type "ClusterIP") }}
+   curl -X GET -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" http://localhost:8080/products
+   {{- else }}
+   # Default case (e.g., NodePort or unknown type):
+   curl -X GET -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" http://<NODE-IP>:8080/products
+   {{- end }}
+  ```
+
+   Get a product by ID:
+   ```bash
+   {{- if (eq .Values.appService.type "LoadBalancer") }}
+   # Assuming LoadBalancer has an external IP:
+   curl -X GET -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" http://<EXTERNAL-IP>:8080/products/1
+   {{- else if (eq .Values.appService.type "ClusterIP") }}
+   curl -X GET -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" http://localhost:8080/products/1
+   {{- else }}
+   # Default case (e.g., NodePort or unknown type):
+   curl -X GET -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" http://<NODE-IP>:8080/products/1
+   {{- end }}
+   ```
+
+   Add a new product:
+   ```bash
+   {{- if (eq .Values.appService.type "LoadBalancer") }}
+   # Assuming LoadBalancer has an external IP:
+   curl -X POST http://<EXTERNAL-IP>:8080/products \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" \
+   -d '{"name": "New Product", "price": 100.10}'
+   {{- else if (eq .Values.appService.type "ClusterIP") }}
+   curl -X POST http://localhost:8080/products \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" \
+   -d '{"name": "New Product", "price": 100.10}'
+   {{- else }}
+   # Default case (e.g., NodePort or unknown type):
+   curl -X POST http://<NODE-IP>:8080/products \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" \
+   -d '{"name": "New Product", "price": 100.10}'
+   {{- end }}
+   ```
+
+   Update an existing product:
+   ```bash
+   {{- if (eq .Values.appService.type "LoadBalancer") }}
+   # Assuming LoadBalancer has an external IP:
+   curl -X PUT http://<EXTERNAL-IP>:8080/products/4 \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" \
+   -d '{"name": "apple", "price": 2}'
+   {{- else if (eq .Values.appService.type "ClusterIP") }}
+   curl -X PUT http://localhost:8080/products/4 \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" \
+   -d '{"name": "apple", "price": 2}'
+   {{- else }}
+   # Default case (e.g., NodePort or unknown type):
+   curl -X PUT http://<NODE-IP>:8080/products/4 \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}" \
+   -d '{"name": "apple", "price": 2}'
+   {{- end }}
+   ```
+
+   Delete a product by its id:
+   ```bash
+   {{- if (eq .Values.appService.type "LoadBalancer") -}}
+   # Assuming LoadBalancer has an external IP:
+   curl -X DELETE http://<EXTERNAL-IP>:8080/products/5 \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}"
+   {{- else if (eq .Values.appService.type "ClusterIP") -}}
+   kubectl port-forward svc/{{ .Values.appService.name }} 8080:8080 -n {{ .Release.Namespace }} &
+   curl -X DELETE http://localhost:8080/products/5 \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}"
+   {{- else -}}
+   # Default case (e.g., NodePort or unknown type):
+   curl -X DELETE http://<NODE-IP>:8080/products/5 \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer {{ .Values.appSecret.API_KEY }}"
+   {{- end }}
+   ```

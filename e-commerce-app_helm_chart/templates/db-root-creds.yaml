@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  DB_ROOT_USER: {{ .Values.rootSecret.DB_ROOT_USER | b64enc }}
+  DB_ROOT_PASSWORD: {{ .Values.rootSecret.DB_ROOT_PASSWORD | b64enc }}
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.rootSecret.name }}
+  namespace: {{ .Release.Namespace }}

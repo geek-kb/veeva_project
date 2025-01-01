@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  DB_APP_USER: {{ .Values.appSecret.DB_APP_USER | b64enc }}
+  DB_APP_PASSWORD: {{ .Values.appSecret.DB_APP_PASSWORD | b64enc }}
+  API_KEY: {{ .Values.appSecret.API_KEY | b64enc }}
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.appSecret.name }}
+  namespace: {{ .Release.Namespace }}

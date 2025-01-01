@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.pv.name }}
+spec:
+  capacity:
+    storage: {{ .Values.pv.capacity | quote }}
+  accessModes:
+{{- range .Values.pv.accessMode }}  
+    - {{ . }}
+{{- end }}
+  hostPath:
+    path: {{ .Values.pv.hostPath.path | quote }}
+  storageClassName: {{ .Values.pv.storageClassName }}
+  volumeMode: {{ .Values.pv.volumeMode }}

@@ -1,0 +1,14 @@
+variable "environment" {
+  description = "The environment for the bucket (e.g., dev, prod)"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The AWS account ID"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "The AWS region"
+  type        = string
+}
