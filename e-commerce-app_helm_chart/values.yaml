@@ -84,7 +84,7 @@ db:
       repository: andriykalashnykov/wget
       tag: "1.0"
       pullPolicy: IfNotPresent
-    initScriptUrl: https://raw.githubusercontent.com/geek-kb/veeva_project/refs/heads/main/e-commerce-app/db/init.sql
+    initScriptUrl: https://raw.githubusercontent.com/geek-kb/veeva_project/refs/heads/main/e-commerce-app-files/db/init.sql
     env:
       MYSQL_APP_USER:
         secretKeyRef:
