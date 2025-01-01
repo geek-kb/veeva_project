@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: camelel/e-commerce-app:latest
+          image: camelel/e-commerce-app:reg
           ports:
             - containerPort: 8080
           env:

@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_limiter import Limiter
+import hashlib
 from flask_limiter.util import get_remote_address
+from werkzeug.security import generate_password_hash
 from functools import wraps
 import logging
 import mysql.connector
@@ -51,38 +53,41 @@ def get_db_connection():
         return None
 
 # UI Route
-@app.route('/')
-def index():
-    """
-    Renders the main index page.
+@app.route("/", methods=["GET", "POST"])
+def register():
+    """Serve the registration form and handle user registration."""
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        email = request.form.get("email")
 
-    Returns:
-        A rendered HTML template for the index page.
-    """
-    return render_template('index.html')
+        # Hash the password for security
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-@app.route('/debug-mysql', methods=['GET'])
-def debug_mysql():
-    """
-    Tests the MySQL connection by executing a simple query.
-
-    Returns:
-        str: Success message if the query works, error message otherwise.
-        int: HTTP status code (200 for success, 500 for failure).
-    """
-    try:
+        # Save the user to the database
         conn = get_db_connection()
         if conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT 1")
-            cursor.close()
-            conn.close()
-            return "MySQL connection is working", 200
-        else:
-            return "MySQL connection failed", 500
-    except Exception as e:
-        logging.error(f"MySQL connection failed: {e}")
-        return f"MySQL connection failed: {e}", 500
+            try:
+                cursor.execute(
+                    "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+                    (username, email, hashed_password)
+                )
+                conn.commit()
+                return redirect(url_for("success"))
+            except mysql.connector.Error as e:
+                conn.rollback()
+                return f"Error: {e}", 400
+            finally:
+                cursor.close()
+                conn.close()
+
+    return render_template("register.html")
+
+@app.route("/success")
+def success():
+    """Confirmation page after successful registration."""
+    return "Registration Successful!"
 
 # Authentication decorator
 def authenticate(f):
@@ -100,6 +105,7 @@ def authenticate(f):
         api_key = request.headers.get('Authorization')
         expected_api_key = f"Bearer {os.getenv('API_KEY')}"
         if api_key != expected_api_key:
+            logging.error("Unauthorized access")
             return jsonify({"error": "Unauthorized"}), 401
         return f(*args, **kwargs)
     return wrapper
@@ -129,6 +135,36 @@ def get_products():
     except Exception as e:
         logging.error(f"MySQL query failed: {e}")
         return jsonify({"error": str(e)}), 500
+    
+# def check_if_user_in_table(email):
+#     """
+#     Fetches all products from the database.
+
+#     Returns:
+#         json: A list of products in JSON format.
+#         int: HTTP status code (200 for success, 500 for database connection issues).
+#     """
+#     try:
+#         conn = get_db_connection()
+#         if conn:
+#             cursor = conn.cursor(dictionary=True)
+#             cursor.execute("SELECT 1 FROM users WHERE email = ? LIMIT 1", (email,))
+#             exists = cursor.fetchone()
+#             cursor.close()
+#             conn.close()
+#             logging.info("User found in database")
+#             return jsonify(exists), 200
+#         else:
+#             return jsonify({"error": "Failed to connect to the database"}), 500
+#     except Exception as e:
+#         logging.error(f"MySQL query failed: {e}")
+#         return jsonify({"error": str(e)}), 500
+#     if exists:
+#         logging.info("User found in database")
+#         return True
+#     else:
+#         logging.info("User not found in database")
+#         return False
 
 @app.route('/products/<int:id>', methods=['GET'])
 @authenticate
