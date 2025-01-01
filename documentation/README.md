@@ -45,6 +45,8 @@ Each module is described in its own `README.md` file and includes:
 3. **Integrate the Modules**:
    - Use the "Example Usage" section in each module's documentation to integrate it into your Terraform project.
 
+4. **Read the [elaborated information](./main.md) of choices regarding this project.
+
 ---
 
 ## Example Workflow
