@@ -46,15 +46,15 @@ variable "cloudfront_distribution_website_endpoint" {
   type        = string
 }
 
-# variable "cdn_logs_bucket_name" {
-#   description = "The name of the S3 bucket for CDN logs"
-#   type        = string
-# }
+variable "cdn_logs_bucket_name" {
+  description = "The name of the S3 bucket for CDN logs"
+  type        = string
+}
 
-# variable "cdn_logs_retention_days" {
-#   description = "The number of days to retain the logs"
-#   type        = number
-# }
+variable "cdn_logs_retention_days" {
+  description = "The number of days to retain the logs"
+  type        = number
+}
 variable "cloudfront_distribution_domain_name" {
   description = "The domain name of the CloudFront distribution"
   type        = string
