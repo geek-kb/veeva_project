@@ -21,7 +21,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Resolved a bug causing invalid Docker image reference formatting.
 
-## [1.0.0] - 2024-12-25
+## [1.0.0] - 2024-12-31
 ### Added
 - Initial release of the Helm chart for deploying the e-commerce application.
 - Introduced basic API functionality with product management endpoints.
