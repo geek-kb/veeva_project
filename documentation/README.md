@@ -48,7 +48,7 @@ Each module is described in its own `README.md` file and includes:
 4. **Read the [elaborated information](./main.md) of choices regarding this project.**
 
 5. **An asciinema playback** showing the e-commerce-app in action:
-[![asciicast](https://asciinema.org/a/oN2ZXDal1r12GvH2nqSFZ6KlW.svg)](https://asciinema.org/a/oN2ZXDal1r12GvH2nqSFZ6KlW)
+[![asciicast](https://asciinema.org/a/weP66O5OVZ1xhCRfghygfSbyG.svg)](https://asciinema.org/a/weP66O5OVZ1xhCRfghygfSbyG)
 
 ---
 
