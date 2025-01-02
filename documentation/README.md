@@ -61,7 +61,7 @@ cd veeva_project
 ```
 
 ### Step 2: Review Documentation
-Navigate to the `documentation/` directory to explore individual module details.
+Navigate to the [`documentation/` directory](./main.md) to explore individual module details.
 
 ### Step 3: Apply Terraform Modules
 Follow the example usage and adjust the variables for your environment.
