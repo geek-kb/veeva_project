@@ -5,7 +5,7 @@ This repository contains various components related to the Veeva project, includ
 
 ## Repository Structure
 
-- **documentation/**: Contains project documentation.
+- **documentation/**: Contains project [documentation](./documentation/README.md).
 - **e-commerce-app/**: Helm chart for deploying the e-commerce application on Kubernetes.
 - **e-commerce-app.source/**: Source code for the e-commerce application.
 - **terraform/**: Terraform scripts for provisioning infrastructure.
