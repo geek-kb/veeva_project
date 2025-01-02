@@ -90,6 +90,7 @@ The following table lists the configurable parameters of the chart and their def
 | `pvc.storage`                          | Requested storage size                    | `1Gi`                     |
 | `appSecret.name`                       | Name of the application secret            | `db-appuser-creds`        |
 | `rootSecret.name`                      | Name of the root database secret          | `db-root-creds`           |
+| `pv.reclaimPolicy`                     | persistentVolumeReclaimPolicy             | `Delete       `           |
 
 ## Accessing the Application
 
